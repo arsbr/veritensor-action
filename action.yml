@@ -1,0 +1,65 @@
+name: 'Veritensor AI Security Scan'
+description: 'Scans AI models, RAG documents, and datasets for Prompt Injections, PII, and Malware.'
+branding:
+  icon: 'shield'
+  color: 'blue'
+
+inputs:
+  target:
+    description: 'File or directory to scan'
+    required: true
+    default: '.'
+  api-key:
+    description: 'Veritensor Enterprise API Key (Optional)'
+    required: false
+  report-to:
+    description: 'Veritensor Enterprise Control Plane URL (Optional)'
+    required: false
+  generate-html:
+    description: 'Generate a CISO-friendly HTML report'
+    required: false
+    default: 'false'
+  jobs:
+    description: 'Number of parallel jobs. Speeds up scanning.'
+    required: false
+    default: '2'
+
+runs:
+  using: "composite"
+  steps:
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.11'
+
+    - name: Install Veritensor CLI
+      shell: bash
+      run: |
+        pip install --upgrade pip
+        pip install "veritensor[all]"
+        python -m spacy download en_core_web_sm || echo "Spacy download skipped"
+
+    - name: Run Veritensor Scan
+      shell: bash
+      env:
+        VERITENSOR_API_KEY: ${{ inputs.api-key }}
+      run: |
+        CMD="veritensor scan ${{ inputs.target }} --jobs ${{ inputs.jobs }}"
+        
+        if [ -n "${{ inputs.report-to }}" ]; then
+          CMD="$CMD --report-to ${{ inputs.report-to }}"
+        fi
+        
+        if [ "${{ inputs.generate-html }}" == "true" ]; then
+          CMD="$CMD --html"
+        fi
+        
+        echo "Running: $CMD"
+        eval $CMD
+
+    - name: Upload HTML Report (if generated)
+      if: ${{ inputs.generate-html == 'true' }}
+      uses: actions/upload-artifact@v4
+      with:
+        name: veritensor-security-report
+        path: veritensor-report.html
