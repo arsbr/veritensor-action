@@ -18,7 +18,8 @@ steps:
       generate-html: 'true'
 ```
 
-Enterprise Usage (Hybrid Scan)
+##Enterprise Usage (Hybrid Scan)
+
 If you have deployed the Veritensor Enterprise Control Plane (Air-Gapped Docker containers), you can route heavy files to your internal servers for deep ML analysis (DeBERTa, GLiNER, YARA, EasyOCR).
 
 ```Yaml
