@@ -4,7 +4,6 @@ Add AI Supply Chain & RAG Security to your CI/CD pipeline in 2 lines of code.
 Veritensor scans Models (`.pkl`, `.pt`), Datasets (`.parquet`), Notebooks, and Documents for Prompt Injections, PII Leaks, and Malware.
 
 ## Usage (Open Source / Local Scan)
-
 This configuration runs the lightweight Python CLI directly in your GitHub Actions runner.
 
 ```yaml
@@ -19,7 +18,6 @@ steps:
 ```
 
 ## Enterprise Usage (Hybrid Scan)
-
 If you have deployed the Veritensor Enterprise Control Plane (Air-Gapped Docker containers), you can route heavy files to your internal servers for deep ML analysis (DeBERTa, GLiNER, YARA, EasyOCR).
 
 ```Yaml
